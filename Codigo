@@ -1,0 +1,77 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class ListaDeTarefas {
+    private ArrayList<String> tarefas = new ArrayList<>();
+    private JFrame frame;
+    private JList<String> tarefasList;
+    private DefaultListModel<String> listModel;
+    private JTextField inputField;
+
+    public ListaDeTarefas() {
+        frame = new JFrame("Aplicativo de Lista de Tarefas");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+
+        listModel = new DefaultListModel<>();
+        tarefasList = new JList<>(listModel);
+        tarefasList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tarefasList.setLayoutOrientation(JList.VERTICAL);
+
+        JScrollPane listScrollPane = new JScrollPane(tarefasList);
+        frame.add(listScrollPane, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        JButton addButton = new JButton("Adicionar");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                adicionarTarefa();
+            }
+        });
+
+        JButton removeButton = new JButton("Remover");
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                removerTarefa();
+            }
+        });
+
+        buttonPanel.add(addButton);
+        buttonPanel.add(removeButton);
+
+        inputField = new JTextField(20);
+        buttonPanel.add(inputField);
+
+        frame.setVisible(true);
+    }
+
+    private void adicionarTarefa() {
+        String novaTarefa = inputField.getText();
+        if (!novaTarefa.isEmpty()) {
+            tarefas.add(novaTarefa);
+            listModel.addElement(novaTarefa);
+            inputField.setText("");
+        }
+    }
+
+    private void removerTarefa() {
+        int selectedIndex = tarefasList.getSelectedIndex();
+        if (selectedIndex != -1) {
+            tarefas.remove(selectedIndex);
+            listModel.remove(selectedIndex);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ListaDeTarefas();
+            }
+        });
+    }
+}
